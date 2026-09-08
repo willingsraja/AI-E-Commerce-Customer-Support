@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>AI E-Commerce Customer Support Agent</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(135deg, #667eea, #764ba2);
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .container {
+
+            width: 700px;
+
+            max-width: 95%;
+
+            background: white;
+
+            border-radius: 18px;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+
+            overflow: hidden;
+
+        }
+
+
+        /* HEADER */
+
+        .header {
+
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+
+            color: white;
+
+            padding: 28px;
+
+            text-align: center;
+
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+            font-size: 28px;
+
+        }
+
+
+        .header p {
+
+            margin: 8px 0 0;
+
+            font-size: 14px;
+
+            opacity: 0.9;
+
+        }
+
+
+        /* CHAT AREA */
+
+        .chat-box {
+
+            height: 400px;
+
+            padding: 20px;
+
+            overflow-y: auto;
+
+            background: #f5f3ff;
+
+        }
+
+
+        .message {
+
+            margin-bottom: 15px;
+
+            padding: 13px 16px;
+
+            border-radius: 12px;
+
+            max-width: 80%;
+
+            white-space: pre-line;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* BOT MESSAGE */
+
+        .bot {
+
+            background: #e9e7ff;
+
+            color: #222;
+
+            border-left: 4px solid #6d5dfc;
+
+        }
+
+
+        /* USER MESSAGE */
+
+        .user {
+
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+
+            color: white;
+
+            margin-left: auto;
+
+        }
+
+
+        /* INPUT */
+
+        .input-area {
+
+            display: flex;
+
+            padding: 16px;
+
+            border-top: 1px solid #ddd;
+
+            background: white;
+
+        }
+
+
+        .input-area input {
+
+            flex: 1;
+
+            padding: 13px 15px;
+
+            border: 1px solid #c9c5e9;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+
+        .input-area input:focus {
+
+            border-color: #6d5dfc;
+
+            box-shadow: 0 0 5px rgba(109,93,252,0.25);
+
+        }
+
+
+        /* SEND BUTTON */
+
+        .input-area button {
+
+            margin-left: 10px;
+
+            padding: 13px 23px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+        }
+
+
+        .input-area button:hover {
+
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+
+        }
+
+
+        /* EXAMPLES */
+
+        .examples {
+
+            padding: 15px 20px 20px;
+
+            font-size: 13px;
+
+            color: #555;
+
+            background: #ffffff;
+
+            border-top: 1px solid #eee;
+
+        }
+
+
+        .examples b {
+
+            color: #5b21b6;
+
+        }
+
+
+        .examples span {
+
+            display: inline-block;
+
+            background: #f0edff;
+
+            color: #4c1d95;
+
+            padding: 7px 11px;
+
+            margin: 4px;
+
+            border-radius: 7px;
+
+            border: 1px solid #ddd6fe;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .examples span:hover {
+
+            background: #ddd6fe;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        /* SCROLLBAR */
+
+        .chat-box::-webkit-scrollbar {
+
+            width: 7px;
+
+        }
+
+
+        .chat-box::-webkit-scrollbar-track {
+
+            background: #f5f3ff;
+
+        }
+
+
+        .chat-box::-webkit-scrollbar-thumb {
+
+            background: #a78bfa;
+
+            border-radius: 10px;
+
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                width: 95%;
+
+            }
+
+            .header h1 {
+
+                font-size: 22px;
+
+            }
+
+            .chat-box {
+
+                height: 380px;
+
+            }
+
+            .message {
+
+                max-width: 88%;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🛒 AI E-Commerce Agent</h1>
+
+        <p>AI-powered customer support assistant</p>
+
+    </div>
+
+
+    <!-- CHAT -->
+
+    <div class="chat-box" id="chatBox">
+
+
+        <div class="message bot">
+
+            Hello! 👋
+
+            I am your AI E-Commerce Customer Support Agent.
+
+            I can help you with products, orders, returns and recommendations.
+
+        </div>
+
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <form class="input-area" id="chatForm">
+
+
+        <input
+
+            type="text"
+
+            id="message"
+
+            placeholder="Ask me something..."
+
+            autocomplete="off"
+
+            required
+
+        >
+
+
+        <button type="submit">
+
+            Send ➤
+
+        </button>
+
+
+    </form>
+
+
+    <!-- EXAMPLES -->
+
+    <div class="examples">
+
+        <b>💡 Try these:</b>
+
+        <br><br>
+
+        <span>Show me laptops</span>
+
+        <span>Show me phones</span>
+
+        <span>Where is my order ORD1001?</span>
+
+        <span>Return my shoes</span>
+
+        <span>Recommend a phone</span>
+
+        <span>My name is Willlings</span>
+
+        <span>What is my name?</span>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+document
+
+.getElementById("chatForm")
+
+.addEventListener("submit", async function(event) {
+
+
+    event.preventDefault();
+
+
+    // Get user message
+
+    let input =
+
+        document.getElementById("message");
+
+
+    let message =
+
+        input.value.trim();
+
+
+    if (message === "") {
+
+        return;
+
+    }
+
+
+    // Chat box
+
+    let chatBox =
+
+        document.getElementById("chatBox");
+
+
+    // Display user message
+
+    let userMessage =
+
+        document.createElement("div");
+
+
+    userMessage.className =
+
+        "message user";
+
+
+    userMessage.innerText =
+
+        message;
+
+
+    chatBox.appendChild(
+
+        userMessage
+
+    );
+
+
+    // Clear input
+
+    input.value = "";
+
+
+    // Scroll down
+
+    chatBox.scrollTop =
+
+        chatBox.scrollHeight;
+
+
+    // Prepare data
+
+    let formData =
+
+        new FormData();
+
+
+    formData.append(
+
+        "message",
+
+        message
+
+    );
+
+
+    // Send to Flask
+
+    let response =
+
+        await fetch(
+
+            "/chat",
+
+            {
+
+                method: "POST",
+
+                body: formData
+
+            }
+
+        );
+
+
+    // Get agent response
+
+    let result =
+
+        await response.text();
+
+
+    // Display agent response
+
+    let botMessage =
+
+        document.createElement("div");
+
+
+    botMessage.className =
+
+        "message bot";
+
+
+    botMessage.innerText =
+
+        result;
+
+
+    chatBox.appendChild(
+
+        botMessage
+
+    );
+
+
+    // Scroll down
+
+    chatBox.scrollTop =
+
+        chatBox.scrollHeight;
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
